@@ -137,6 +137,27 @@
                 <p class="mb-3">{{ product.description}}</p>
                 <h6>Price</h6>
                 <p class="mb-1">$ {{ product.price}}</p>
+                {% if user.is_authenticated %}
+                <div class="mt-3">
+                  {% if product.is_favourite %}
+                    <a
+                      onclick="markFavourite('{{product.id}}', false)"
+                      data="{{product.id}}"
+                      id="favBtnModal{{product.id}}"
+                      style="color:red;"
+                    >
+                  {% else %}
+                    <a
+                      onclick="markFavourite('{{product.id}}', false)"
+                      data="{{product.id}}"
+                      id="favBtnModal{{product.id}}"
+                    >
+                  {% endif %}
+                    <i class="fas fa-heart fa-3x"></i>
+                    </a>
+                </div>
+                {% endif %}
+
               </div>
             </div>
           </div>

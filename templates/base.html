@@ -78,29 +78,40 @@ Clark, MO 65243</p>
         <!-- Core theme JS-->
         <script src="{% static 'js/scripts.js' %}"></script>
         <script>
-            function markFavourite(id, reload) {
-              $.ajax({
-                url: "/favourite/mark/" + id + "/",
-                method: "POST",
-                success: function (response) {
-                  if (response["success"] == true) {
-                    if (reload == true){
-                        location.reload();
-                    }
-                    btnId = "#favBtn" + id;
-                    if (response["marked"] == true) {
+          function markFavourite(id, reload) {
+            $.ajax({
+              url: "/favourite/mark/" + id + "/",
+              method: "POST",
+              success: function (response) {
+                if (response["success"] == true) {
+                  if (reload === true) {
+                    location.reload();
+                  }
+
+                  let btnId = "#favBtn" + id;
+                  if ($(btnId).length) {
+                    if (response["marked"] === true) {
                       $(btnId).css("color", "red");
-                      // alert('Successfully added to favourite')
                     } else {
                       $(btnId).css("color", "white");
-                      // alert('Successfully removed from favourite')
                     }
-                  } else {
-                    alert("Failed to mark as favourite");
                   }
-                },
-              });
-            }
+
+                  let modalBtnId = "#favBtnModal" + id;
+                  if ($(modalBtnId).length) {
+                    if (response["marked"] === true) {
+                      $(modalBtnId).css("color", "red");
+                    } else {
+                      $(modalBtnId).css("color", "gray");
+                    }
+                  }
+
+                } else {
+                  alert("Failed to mark as favourite");
+                }
+              },
+            });
+          }
           </script>
     </body>
 </html>
