@@ -1,4 +1,4 @@
-name: Generate SBOM
+name: Generate and Scan SBOM
 
 on:
   push:
@@ -26,3 +26,31 @@ jobs:
         with:
           name: sbom-syft-json
           path: isen-python-generate-sbom.syft-json
+
+  grype-scan:
+    needs: sbom
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Download SBOM from previous job
+        uses: actions/download-artifact@v4
+        with:
+          name: sbom-syft-json
+          path: ./sbom
+
+      - name: Install Grype
+        run: |
+          curl -sSfL https://raw.githubusercontent.com/anchore/grype/main/install.sh | sh -s -- -b /usr/local/bin
+
+      - name: Scan SBOM with Grype
+        run: |
+          grype sbom:./sbom/isen-python-generate-sbom.syft-json -o table > grype-report.txt
+
+      - name: Upload Grype report
+        uses: actions/upload-artifact@v4
+        with:
+          name: grype-report
+          path: grype-report.txt
