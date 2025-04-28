@@ -4,3 +4,4 @@ env/*
 .pytest_cache
 perso
 node_modules/
+key.json
